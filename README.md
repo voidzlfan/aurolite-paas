@@ -1,9 +1,13 @@
 # Aurolite-Paas
 
 该项目使用Ant Design Pro进行初始化
+
 PaaS是（Platform as a Service）的缩写，是指平台即服务
+
 把服务器平台作为一种服务提供的商业模式，通过网络进行程序提供的服务称之为SaaS(Software as a Service)
+
 而云计算时代相应的服务器平台或者开发环境作为服务进行提供就成为了PaaS(Platform as a Service)
+
 
 ## 开发环境
 
