@@ -25,16 +25,16 @@ export default [
             routes: [
               {
                 path: '/',
-                redirect: '/project',
+                redirect: '/projectManage',
               },
               {
-                path: '/project',
+                path: '/projectManage',
                 name: 'project',
                 icon: 'project',
                 component: './Project',
               },
               {
-                path: '/account',
+                path: '/accountManage',
                 name: 'account.manage',
                 icon: 'user',
                 component: './Account',

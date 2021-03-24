@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
+import ProForm, { ProFormText, ProFormDateRangePicker, ProFormSelect } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 import ProTable from '@ant-design/pro-table';
-import ProForm, {
-  ModalForm,
-  ProFormText,
-  ProFormDateRangePicker,
-  ProFormSelect,
-  DrawerForm,
-} from '@ant-design/pro-form';
-import { Form, Popconfirm, Button, Input } from 'antd';
+import { Card, Button, Form, Input, Space, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
 
+const { Option } = Select;
+
 import styles from './index.less';
-import { getAccList, delAccount } from '@/services/account';
+import { getAccList } from '@/services/account';
 
 /**
  * 账号管理
@@ -23,25 +19,54 @@ import { getAccList, delAccount } from '@/services/account';
 const Account = (props) => {
   console.log('props', props);
   const { accountList, dispatch } = props;
-  console.log('accountList', accountList);
-
-  const [drawerVisit, setDrawerVisit] = useState(false);
 
   const [form] = Form.useForm();
 
-  const onSetting = (text, record, _, action) => {
-    setDrawerVisit(true)
+  const layout = {
+    //labelCol: { span: 8 },
+    wrapperCol: { span: 18 },
   };
 
-  const onConfirm = async (text, record, _, action) => {
-    console.log('text', text);
-    console.log('record', record);
-    console.log('action', action);
-    const res = await delAccount();
-    if (res) {
-      action.reload();
-    }
+  // dispatch，发起查询
+  const onFinish = () => {
+    form.validateFields().then((values) => {
+      dispatch({
+        type: 'account/search',
+        payload: { ...values },
+      });
+    });
   };
+
+  const search = (
+    <Form form={form} {...layout} layout="inline" onFinish={onFinish}>
+      <Form.Item label="角色类型" name="role">
+        <Select placeholder="请选择角色类型" style={{ width: 200 }} allowClear>
+          <Option value="user">使用者</Option>
+          <Option value="manager">项目管理员</Option>
+          <Option value="accendant">维修人员</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        label="账号"
+        name="account"
+        rules={[
+          {
+            pattern: /^[0-9-]+$/,
+            message: '请输入数字',
+          },
+          { max: 11, message: '最长11位' },
+        ]}
+      >
+        <Input placeholder="请输入要搜索的账号" style={{ width: 200 }} allowClear />
+      </Form.Item>
+      <Space>
+        <Button type="primary" htmlType="submit">
+          搜索
+        </Button>
+        <Button htmlType="reset">重置</Button>
+      </Space>
+    </Form>
+  );
 
   const columns = [
     {
@@ -113,26 +138,28 @@ const Account = (props) => {
         <a
           key="editable"
           onClick={() => {
-            //action.startEditable?.(record.id);
-            onSetting(text, record, _, action);
+            action.startEditable?.(record.id);
           }}
         >
           设置
         </a>,
-        <Popconfirm
-          key="popconfirm"
-          title={`您确定删除该子账号吗?`}
-          okText="是"
-          cancelText="否"
-          onConfirm={() => onConfirm(text, record, _, action)}
-        >
-          <a>删除</a>
-        </Popconfirm>,
+        <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
+          删除
+        </a>,
+        //   <TableDropdown
+        //     key="actionGroup"
+        //     onSelect={() => action.reload()}
+        //     menus={[
+        //       { key: 'copy', name: '复制' },
+        //       { key: 'delete', name: '删除' },
+        //     ]}
+        //   />,
       ],
     },
   ];
 
   const addAccount = () => {};
+
 
   return (
     <PageContainer>
@@ -146,14 +173,15 @@ const Account = (props) => {
 
       <ProCard ghost>
         <ProTable
-          title={() => <Button type="primary">+ 新增子账号</Button>}
           formRef={form}
           rowKey="id"
           columns={columns}
           params={{ pageSize: 10 }}
           request={async (params) => {
-            console.log('params', params);
-            const response = await getAccList(params);
+            const response = await getAccList({
+              page: params.current,
+              pageSize: params.pageSize,
+            });
             return {
               data: response.data,
               // success 请返回 true，
@@ -166,49 +194,10 @@ const Account = (props) => {
           sticky={true}
           toolBarRender={false}
           search={{ layout: 'vertical' }}
-          pagination={{ pageSize: 10 }}
+          pagination={{  pageSize: 10 }}
           size="large"
         />
       </ProCard>
-
-      <DrawerForm
-        width={600}
-        onVisibleChange={setDrawerVisit}
-        title="新建表单"
-        visible={drawerVisit}
-        onFinish={async () => {
-          message.success('提交成功');
-          return true;
-        }}
-        className={styles.form}
-      >
-        <ProForm.Group >
-          <ProFormText
-            width="sm"
-            name="name"
-            label="签约客户名称"
-            tooltip="最长为 24 位"
-            placeholder="请输入名称"
-          />
-
-          <ProFormText
-            width="sm"
-            name="name"
-            label="签约客户名称"
-            tooltip="最长为 24 位"
-            placeholder="请输入名称"
-          />
-
-        </ProForm.Group>
-
-        {/* <Form>
-          <Form.Item wrapperCol={{span: 6}}>
-            <Input placeholder="ssss"></Input>
-          </Form.Item>
-        </Form> */}
-
-      </DrawerForm>
-
     </PageContainer>
   );
 };

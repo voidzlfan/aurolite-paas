@@ -7,6 +7,7 @@ const UserModel = {
   effects: {
     *fetch(_, { call, put }) {
       const response = yield call(queryUsers);
+      //console.log("model处理结果",response);
       yield put({
         type: 'save',
         payload: response,

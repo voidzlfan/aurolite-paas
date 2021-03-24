@@ -55,7 +55,7 @@ const menuDataRender = (menuList) =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright={`${new Date().getFullYear()} 奥莱照明`}
+    copyright={`${new Date().getFullYear()} 奥莱敏控`}
     links={
       [
         // {
@@ -82,7 +82,7 @@ const defaultFooterDom = (
 );
 
 const BasicLayout = (props) => {
-  console.log('props', props);
+  //console.log('props', props);
   const {
     dispatch,
     children,
@@ -145,24 +145,24 @@ const BasicLayout = (props) => {
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
       
-      breadcrumbRender={(routers = []) => [
-        {
-          path: '/',
-          breadcrumbName: formatMessage({
-            id: 'menu.home',
-          }),
-        },
+      // breadcrumbRender={(routers = []) => [
+      //   {
+      //     path: '/',
+      //     breadcrumbName: formatMessage({
+      //       id: 'menu.home',
+      //     }),
+      //   },
         
-        ...routers,
-      ]}
-      itemRender={(route, params, routes, paths) => {
-        const first = routes.indexOf(route) === 0;
-        return first ? (
-          <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
-        ) : (
-          <span>{route.breadcrumbName}</span>
-        );
-      }}
+      //   ...routers,
+      // ]}
+      // itemRender={(route, params, routes, paths) => {
+      //   const first = routes.indexOf(route) === 0;
+      //   return first ? (
+      //     <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
+      //   ) : (
+      //     <span>{route.breadcrumbName}</span>
+      //   );
+      // }}
       footerRender={() => {
         if (settings.footerRender || settings.footerRender === undefined) {
           return defaultFooterDom;
@@ -175,10 +175,11 @@ const BasicLayout = (props) => {
         menuDataRef.current = menuData || [];
         return menuData || [];
       }}
-      waterMarkProps={{
-        content: 'Aurolite',
-        fontColor: 'rgba(24,144,255,0.15)',
-      }}
+      //水印
+      // waterMarkProps={{
+      //   content: 'Aurolite',
+      //   fontColor: 'rgba(24,144,255,0.15)',
+      // }}
       //links={[<a>测试</a>]}
       headerContentRender={(BasicLayoutProps)=> "BasicLayout headerContentRender"} //(BasicLayoutProps.breadcrumb[location.pathname].name)
       //headerRender={()=> <div>sss</div>} 自定义顶栏
