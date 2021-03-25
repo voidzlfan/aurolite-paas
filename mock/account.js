@@ -4,7 +4,7 @@ const data = [
     id: 123456,
     name: '范志林1',
     account: 17875305743,
-    role: 'manager',
+    role: 'user',
     created_at: '2020-05-26T02:13:47Z',
     updated_at: '2020-05-26T02:13:47Z',
     closed_at: null,
@@ -13,7 +13,7 @@ const data = [
   {
     id: 1234567,
     name: '范志林2',
-    account: 17875305743,
+    account: 17875308603,
     role: 'manager',
     created_at: '2020-05-26T02:13:47Z',
     updated_at: '2020-05-26T02:13:47Z',
@@ -23,7 +23,7 @@ const data = [
   {
     id: 12345167,
     name: '范志林3',
-    account: 17875305743,
+    account: 17875307893,
     role: 'manager',
     created_at: '2020-05-26T02:13:47Z',
     updated_at: '2020-05-26T02:13:47Z',
@@ -33,8 +33,8 @@ const data = [
   {
     id: 12344567,
     name: '范志林4',
-    account: 17875305743,
-    role: 'manager',
+    account: 17875301111,
+    role: 'accendant',
     created_at: '2020-05-26T02:13:47Z',
     updated_at: '2020-05-26T02:13:47Z',
     closed_at: null,

@@ -5,16 +5,20 @@ import ProTable from '@ant-design/pro-table';
 import ProForm, {
   ModalForm,
   ProFormText,
-  ProFormDateRangePicker,
   ProFormSelect,
   DrawerForm,
+  ProFormColorPicker,
+  ProFormCheckbox,
 } from '@ant-design/pro-form';
-import { Form, Popconfirm, Button, Input } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Form, Popconfirm, Button, Card, message, Popover } from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
 
 import styles from './index.less';
 import { getAccList, delAccount } from '@/services/account';
+
+import CreateForm from './components/CreateForm';
+import ProjectList from './components/Project';
 
 /**
  * 账号管理
@@ -23,14 +27,19 @@ import { getAccList, delAccount } from '@/services/account';
 const Account = (props) => {
   console.log('props', props);
   const { accountList, dispatch } = props;
-  console.log('accountList', accountList);
+  //console.log('accountList', accountList);
 
-  const [drawerVisit, setDrawerVisit] = useState(false);
+  const [createModalVisible, handleModalVisible] = useState(false);
+  const [updateModalVisible, handleUpdateModalVisible] = useState(false);
+  const [projectPermissions, setProjectPermissions] = useState(false);
+
+  const [acc, setAcc] = useState({});
 
   const [form] = Form.useForm();
 
   const onSetting = (text, record, _, action) => {
-    setDrawerVisit(true)
+    setAcc(record);
+    handleUpdateModalVisible(true);
   };
 
   const onConfirm = async (text, record, _, action) => {
@@ -43,6 +52,28 @@ const Account = (props) => {
     }
   };
 
+  //模拟项目数据
+  let projectList = [1, 2, 3, 4, 5, 6];
+  const allProjectList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  const content = (
+
+      allProjectList.map((item) => {
+        return (
+          <div key={item} className={styles.projectMan}>
+            <span>{item}</span>
+            <PlusOutlined
+              onClick={(item) => {
+                console.log('add');
+                //dispatch
+              }}
+            />
+          </div>
+        );
+      })
+
+  );
+
   const columns = [
     {
       dataIndex: 'id',
@@ -50,6 +81,9 @@ const Account = (props) => {
       //width: 48,
       hideInSearch: true,
       hideInTable: true,
+      formItemProps: {
+        hidden: true,
+      },
     },
     {
       title: '姓名',
@@ -73,7 +107,15 @@ const Account = (props) => {
       key: 'account',
       dataIndex: 'account',
       copyable: true,
-      order: 1,
+      //order: 1,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+      },
     },
     {
       title: '创建时间',
@@ -81,13 +123,22 @@ const Account = (props) => {
       dataIndex: 'created_at',
       valueType: 'date',
       hideInSearch: true,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
+        hidden: true,
+      },
     },
     {
       title: '角色类型',
       dataIndex: 'role',
       filters: true,
       onFilter: true,
-      order: 2,
+      //order: 2,
 
       valueType: 'select',
       valueEnum: {
@@ -103,6 +154,14 @@ const Account = (props) => {
           text: '维修人员',
           //status: 'Processing',
         },
+      },
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+            message: '此项为必填项',
+          },
+        ],
       },
     },
 
@@ -146,7 +205,11 @@ const Account = (props) => {
 
       <ProCard ghost>
         <ProTable
-          title={() => <Button type="primary">+ 新增子账号</Button>}
+          title={() => (
+            <Button type="primary" onClick={handleModalVisible}>
+              + 新增子账号
+            </Button>
+          )}
           formRef={form}
           rowKey="id"
           columns={columns}
@@ -168,47 +231,125 @@ const Account = (props) => {
           search={{ layout: 'vertical' }}
           pagination={{ pageSize: 10 }}
           size="large"
+          //search={false}
+          // renderFormItem={(
+          //   item,
+          //   { type, defaultRender, formItemProps, fieldProps, ...rest },
+          //   form,
+          // ) => {
+          //   if (type === 'form') {
+          //     return null;
+          //   }
+          //   const status = form.getFieldValue('account');
+          //   console.log('status', status);
+          //   if (status !== 'open') {
+          //     return <Input {...fieldProps} placeholder="请输入account" />;
+          //   }
+          //   return defaultRender(_);
+          // }}
         />
       </ProCard>
 
+      <CreateForm onCancel={() => handleModalVisible(false)} modalVisible={createModalVisible}>
+        <ProTable
+          onSubmit={async (value) => {
+            // const success = await handleAdd(value);
+
+            // if (success) {
+            //   handleModalVisible(false);
+
+            //   if (actionRef.current) {
+            //     actionRef.current.reload();
+            //   }
+            // }
+            console.log('value', value);
+          }}
+          rowKey="id"
+          type="form"
+          columns={columns}
+        />
+      </CreateForm>
+
       <DrawerForm
+        onVisibleChange={handleUpdateModalVisible}
         width={600}
-        onVisibleChange={setDrawerVisit}
-        title="新建表单"
-        visible={drawerVisit}
+        title={'权限设置：' + acc.account}
+        visible={updateModalVisible}
         onFinish={async () => {
-          message.success('提交成功');
+          //acc存储当前记录信息
+          handleUpdateModalVisible(false);
+          message.success('设置成功');
           return true;
         }}
-        className={styles.form}
+        drawerProps={{
+          destroyOnClose: true,
+        }}
       >
-        <ProForm.Group >
+        <ProForm.Group>
           <ProFormText
-            width="sm"
+            width="md"
             name="name"
-            label="签约客户名称"
-            tooltip="最长为 24 位"
+            label="名称"
+            //tooltip="最长为 24 位"
             placeholder="请输入名称"
+            initialValue={acc.name}
+            formItemProps={{
+              rules: [
+                {
+                  required: true,
+                  message: '内容不能为空',
+                },
+              ],
+            }}
           />
-
-          <ProFormText
-            width="sm"
-            name="name"
-            label="签约客户名称"
-            tooltip="最长为 24 位"
-            placeholder="请输入名称"
-          />
-
         </ProForm.Group>
 
-        {/* <Form>
-          <Form.Item wrapperCol={{span: 6}}>
-            <Input placeholder="ssss"></Input>
-          </Form.Item>
-        </Form> */}
+        <ProForm.Group>
+          <ProFormSelect
+            options={[
+              {
+                value: 'user',
+                label: '使用者',
+              },
+              {
+                value: 'manager',
+                label: '项目管理员',
+              },
+              {
+                value: 'accendant',
+                label: '维修人员',
+              },
+            ]}
+            width="md"
+            name="role"
+            label="角色类型"
+            initialValue={acc.role}
+            required={true}
+            allowClear={false}
+          />
+        </ProForm.Group>
 
+        <ProForm.Group>
+          <Card
+            title={<div className={styles.cardTitle}>项目权限</div>}
+            extra={
+              <Popover content={content} trigger="click" placement="right">
+                <Button type="link">添加</Button>
+              </Popover>
+            }
+            style={{ width: 330 }}
+          >
+            {projectList.map((item) => {
+              return (
+                <div key={item} className={styles.projectMan}>
+                  <span>{item}</span>
+                  <DeleteOutlined onClick={() => console.log('delete')} />
+                </div>
+              );
+            })}
+          </Card>
+        </ProForm.Group>
       </DrawerForm>
-
     </PageContainer>
   );
 };

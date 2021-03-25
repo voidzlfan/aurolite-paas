@@ -2,7 +2,8 @@ import { getAccountList } from '@/services/account';
 const accountModel = {
   namespace: 'account',
   state: {
-    accountList: [],
+    accountList: [], //所有的账号,包含该账号下项目权限的数组
+    projectList: [], //所有的项目数
   },
   effects: {
     *search({ payload, type }, { call, put }) {
