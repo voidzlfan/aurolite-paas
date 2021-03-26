@@ -10,7 +10,7 @@ import ProForm, {
   ProFormColorPicker,
   ProFormCheckbox,
 } from '@ant-design/pro-form';
-import { Form, Popconfirm, Button, Card, message, Popover } from 'antd';
+import { Form, Popconfirm, Button, Card, message, Popover, Row, Col } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
 
@@ -56,23 +56,19 @@ const Account = (props) => {
   let projectList = [1, 2, 3, 4, 5, 6];
   const allProjectList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-  const content = (
-
-      allProjectList.map((item) => {
-        return (
-          <div key={item} className={styles.projectMan}>
-            <span>{item}</span>
-            <PlusOutlined
-              onClick={(item) => {
-                console.log('add');
-                //dispatch
-              }}
-            />
-          </div>
-        );
-      })
-
-  );
+  const content = allProjectList.map((item) => {
+    return (
+      <div key={item} className={styles.projectMan}>
+        <span>{item}</span>
+        <PlusOutlined
+          onClick={(item) => {
+            console.log('add');
+            //dispatch
+          }}
+        />
+      </div>
+    );
+  });
 
   const columns = [
     {
@@ -272,7 +268,7 @@ const Account = (props) => {
 
       <DrawerForm
         onVisibleChange={handleUpdateModalVisible}
-        width={600}
+        width={400}
         title={'权限设置：' + acc.account}
         visible={updateModalVisible}
         onFinish={async () => {
@@ -285,9 +281,9 @@ const Account = (props) => {
           destroyOnClose: true,
         }}
       >
-        <ProForm.Group>
+
           <ProFormText
-            width="md"
+            span={24}
             name="name"
             label="名称"
             //tooltip="最长为 24 位"
@@ -302,9 +298,9 @@ const Account = (props) => {
               ],
             }}
           />
-        </ProForm.Group>
 
-        <ProForm.Group>
+
+
           <ProFormSelect
             options={[
               {
@@ -320,35 +316,41 @@ const Account = (props) => {
                 label: '维修人员',
               },
             ]}
-            width="md"
+            span={24}
+            //width="md"
             name="role"
             label="角色类型"
             initialValue={acc.role}
             required={true}
             allowClear={false}
           />
-        </ProForm.Group>
 
-        <ProForm.Group>
-          <Card
-            title={<div className={styles.cardTitle}>项目权限</div>}
-            extra={
-              <Popover content={content} trigger="click" placement="right">
-                <Button type="link">添加</Button>
-              </Popover>
-            }
-            style={{ width: 330 }}
-          >
-            {projectList.map((item) => {
-              return (
-                <div key={item} className={styles.projectMan}>
-                  <span>{item}</span>
-                  <DeleteOutlined onClick={() => console.log('delete')} />
-                </div>
-              );
-            })}
-          </Card>
-        </ProForm.Group>
+
+
+          <Row>
+            <Col span={12}>
+              <Card
+                title={<div className={styles.cardTitle}>项目权限</div>}
+                extra={
+                  <Popover content={content} trigger="click" placement="right">
+                    <Button type="link">添加</Button>
+                  </Popover>
+                }
+                //style={{ width: 330 }}
+              >
+                {projectList.map((item) => {
+                  return (
+                    
+                    <div key={item} className={styles.projectMan}>
+                      <span>{item}</span>
+                      <DeleteOutlined onClick={() => console.log('delete')} />
+                    </div>
+                  );
+                })}
+              </Card>
+            </Col>
+          </Row>
+
       </DrawerForm>
     </PageContainer>
   );
