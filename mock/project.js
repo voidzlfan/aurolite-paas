@@ -15,6 +15,9 @@ function getProject(req, res, u) {
         online: 6,
         offline: 0,
         exception: 12,
+        leaderName: '谢学高',
+        leaderMobile: '13632320650',
+        address: '广东省广州市番禺区 奥莱照明电器有限公司',
       },
     ]);
   }
@@ -29,6 +32,9 @@ function getProject(req, res, u) {
       online: 6,
       offline: 0,
       exception: 12,
+      leaderName: '谢学高1',
+      leaderMobile: '13632320650',
+      address: '广东省广州市番禺区 奥莱照明电器有限公司',
     },
     {
       projectId: 2,
@@ -39,6 +45,9 @@ function getProject(req, res, u) {
       online: 0,
       offline: 0,
       exception: 0,
+      leaderName: '谢学高2',
+      leaderMobile: '13632320650',
+      address: '广东省广州市番禺区 奥莱照明电器有限公司',
     },
   ]);
 }

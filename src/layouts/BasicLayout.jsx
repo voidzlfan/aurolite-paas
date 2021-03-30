@@ -4,18 +4,23 @@
  * @see You can view component api by: https://github.com/ant-design/ant-design-pro-layout
  */
 import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useIntl, connect, history } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
+import {
+  ProjectOutlined,
+  UserOutlined,
+  PartitionOutlined,
+  SettingOutlined,
+  ScheduleOutlined,
+  SecurityScanOutlined,
+} from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
-import secondRoute from '../../config/sec-route';
 
-import { MenuDataItem } from '@ant-design/pro-layout';
-
+// 无权限页面
 const noMatch = (
   <Result
     status={403}
@@ -29,30 +34,31 @@ const noMatch = (
   />
 );
 
-// 动态路由
-const serverMenuItem = () => {
-  const transMenuItem = [];
-  if (Array.isArray(menuData)) {
-    menuData.forEach((v) => {
-      const localV = { ...v, children: v.children ? menuDataRender(v.children) : [] };
-      const localMenuDataItem = Authorized.check(v.authority, localV, null);
-      transMenuItem.push(localMenuDataItem);
-    });
-  }
-  return transMenuItem;
+// 图标枚举
+const iconEnum = {
+  project: <ProjectOutlined />,
+  user: <UserOutlined />,
+  partition: <PartitionOutlined />,
+  setting: <SettingOutlined />,
+  scheduled: <ScheduleOutlined />,
+  securityScan: <SecurityScanOutlined />,
 };
 
 /** Use Authorized check all menu item */
+// 获取后端返回的权限路由数据，图标会丢失，所以用上面的 iconEnum 添加枚举映射
+// 参考 https://github.com/umijs/umi-plugin-antd-icon-config/issues/2
 const menuDataRender = (menuList) =>
   menuList.map((item) => {
     const localItem = {
       ...item,
+      icon: iconEnum[item.icon],
       children: item.children ? menuDataRender(item.children) : undefined,
     };
     //console.log("tt",Authorized.check(item.authority, localItem, null));
     return Authorized.check(item.authority, localItem, null); // 参数对应路由项所需的权限、鉴权成功后的渲染内容、鉴权失败后的渲染内容
   });
 
+// 底部
 const defaultFooterDom = (
   <DefaultFooter
     copyright={`${new Date().getFullYear()} 奥莱敏控`}
@@ -87,22 +93,26 @@ const BasicLayout = (props) => {
     dispatch,
     children,
     settings,
+    menuData,
+    loading,
     location = {
       pathname: '/',
     },
   } = props;
   const menuDataRef = useRef([]);
+
   useEffect(() => {
     if (dispatch) {
       dispatch({
-        type: 'user/fetchCurrent',
+        type: 'menu/fetchMenu',
       });
     }
   }, []);
-  /** Init variables */
+
+  console.log('basic menuData', menuData);
 
   const handleMenuCollapse = (payload) => {
-    console.log('payload', payload);
+    //console.log('payload', payload);
     if (dispatch) {
       dispatch({
         type: 'global/changeLayoutCollapsed',
@@ -120,15 +130,14 @@ const BasicLayout = (props) => {
   );
   const { formatMessage } = useIntl();
 
-  const { route } = props;
-
   return (
     <ProLayout
       logo={logo}
       formatMessage={formatMessage}
+      menu={{ loading }}
+      loading={loading}
       {...props} //注入包含route.js路由配置信息、withRouter
       {...settings} //注入defaultSettings.js配置信息
-      //route={location.pathname === '/project' ? secondRoute : route}
       onCollapse={handleMenuCollapse}
       onMenuHeaderClick={() => history.push('/')}
       menuItemRender={(menuItemProps, defaultDom) => {
@@ -144,7 +153,6 @@ const BasicLayout = (props) => {
 
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
-      
       // breadcrumbRender={(routers = []) => [
       //   {
       //     path: '/',
@@ -152,7 +160,7 @@ const BasicLayout = (props) => {
       //       id: 'menu.home',
       //     }),
       //   },
-        
+
       //   ...routers,
       // ]}
       // itemRender={(route, params, routes, paths) => {
@@ -169,7 +177,7 @@ const BasicLayout = (props) => {
         }
         return null;
       }}
-      menuDataRender={menuDataRender}
+      menuDataRender={() => menuDataRender(menuData)}
       rightContentRender={() => <RightContent />}
       postMenuData={(menuData) => {
         menuDataRef.current = menuData || [];
@@ -181,7 +189,7 @@ const BasicLayout = (props) => {
       //   fontColor: 'rgba(24,144,255,0.15)',
       // }}
       //links={[<a>测试</a>]}
-      headerContentRender={(BasicLayoutProps)=> "BasicLayout headerContentRender"} //(BasicLayoutProps.breadcrumb[location.pathname].name)
+      headerContentRender={(BasicLayoutProps) => 'BasicLayout headerContentRender'} //(BasicLayoutProps.breadcrumb[location.pathname].name)
       //headerRender={()=> <div>sss</div>} 自定义顶栏
       //menuHeaderRender={()=> <div>sss</div>} 自定义菜单栏顶部标题和logo
       //pageTitleRender={()=>("sss")} 自定义浏览器tab标签栏上的标题
@@ -200,4 +208,5 @@ export default connect(({ global, settings, menu }) => ({
   collapsed: global.collapsed, //控制菜单的收起和展开
   settings,
   menuData: menu.menuData,
+  loading: menu.loading,
 }))(BasicLayout);

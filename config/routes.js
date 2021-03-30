@@ -23,6 +23,46 @@ export default [
             component: '../layouts/BasicLayout',
             authority: ['admin', 'user'],
             routes: [
+              // {
+              //   path: '/overview',
+              //   name: 'project',
+              //   children: [
+              //     {
+              //       path: '/overview/daily',
+              //       name: 'project',
+              //       children: null,
+              //       authority: null,
+              //     },
+              //   ],
+              //   authority: ['admin', 'user'],
+              // },
+              // {
+              //   path: '/function',
+              //   name: 'project',
+              //   children: [
+              //     {
+              //       path: '/function/sign',
+              //       name: 'project',
+              //       children: null,
+              //       authority: null,
+              //     },
+              //     {
+              //       path: '/function/task',
+              //       name: 'project',
+              //       children: null,
+              //       authority: ['admin'],
+              //     },
+              //     {
+              //       path: '/function/pay',
+              //       name: 'project',
+              //       children: null,
+              //       authority: ['admin'],
+              //     },
+              //   ],
+              //   authority: null,
+              // },
+
+
               {
                 path: '/',
                 redirect: '/projectManage',
@@ -30,35 +70,13 @@ export default [
               {
                 path: '/projectManage',
                 name: 'project',
-                icon: 'project',
                 component: './Project',
               },
               {
                 path: '/accountManage',
                 name: 'account.manage',
-                icon: 'user',
                 component: './Account',
               },
-              // {
-              //   path: '/list',
-              //   name: 'list.table-list',
-              //   icon: 'table',
-              //   component: './TableList',
-              // },
-              //以下两项为自定义菜单
-              // {
-              //   path: '/project',
-              //   name: 'project',
-              //   icon: 'project',
-              //   component: './Project',
-              // },
-              // {
-              //   path: '/account',
-              //   name: 'account.manage',
-              //   icon: 'user',
-              //   component: './Project',
-              // },
-              //---------
               {
                 component: './404',
               },

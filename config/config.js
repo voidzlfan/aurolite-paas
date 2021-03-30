@@ -3,6 +3,7 @@ import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+
 const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
@@ -20,9 +21,9 @@ export default defineConfig({
     // default true, when it is true, will use `navigator.language` overwrite default
     baseNavigator: true,
   },
-  dynamicImport: {
-    loading: '@/components/PageLoading/index',
-  },
+  // dynamicImport: {
+  //   loading: '@/components/PageLoading/index',
+  // },
   targets: {
     ie: 11,
   },

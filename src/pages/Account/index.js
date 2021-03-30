@@ -2,14 +2,7 @@ import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
 import ProTable from '@ant-design/pro-table';
-import ProForm, {
-  ModalForm,
-  ProFormText,
-  ProFormSelect,
-  DrawerForm,
-  ProFormColorPicker,
-  ProFormCheckbox,
-} from '@ant-design/pro-form';
+import ProForm, { ModalForm, ProFormText, ProFormSelect, DrawerForm } from '@ant-design/pro-form';
 import { Form, Popconfirm, Button, Card, message, Popover, Row, Col } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { connect } from 'umi';
@@ -281,76 +274,69 @@ const Account = (props) => {
           destroyOnClose: true,
         }}
       >
-
-          <ProFormText
-            span={24}
-            name="name"
-            label="名称"
-            //tooltip="最长为 24 位"
-            placeholder="请输入名称"
-            initialValue={acc.name}
-            formItemProps={{
-              rules: [
-                {
-                  required: true,
-                  message: '内容不能为空',
-                },
-              ],
-            }}
-          />
-
-
-
-          <ProFormSelect
-            options={[
+        <ProFormText
+          span={24}
+          name="name"
+          label="名称"
+          //tooltip="最长为 24 位"
+          placeholder="请输入名称"
+          initialValue={acc.name}
+          formItemProps={{
+            rules: [
               {
-                value: 'user',
-                label: '使用者',
+                required: true,
+                message: '内容不能为空',
               },
-              {
-                value: 'manager',
-                label: '项目管理员',
-              },
-              {
-                value: 'accendant',
-                label: '维修人员',
-              },
-            ]}
-            span={24}
-            //width="md"
-            name="role"
-            label="角色类型"
-            initialValue={acc.role}
-            required={true}
-            allowClear={false}
-          />
+            ],
+          }}
+        />
 
+        <ProFormSelect
+          options={[
+            {
+              value: 'user',
+              label: '使用者',
+            },
+            {
+              value: 'manager',
+              label: '项目管理员',
+            },
+            {
+              value: 'accendant',
+              label: '维修人员',
+            },
+          ]}
+          span={24}
+          //width="md"
+          name="role"
+          label="角色类型"
+          initialValue={acc.role}
+          required={true}
+          allowClear={false}
+        />
 
-
-          <Row>
-            <Col span={12}>
-              <Card
-                title={<div className={styles.cardTitle}>项目权限</div>}
-                extra={
-                  <Popover content={content} trigger="click" placement="right">
-                    <Button type="link">添加</Button>
-                  </Popover>
-                }
-                //style={{ width: 330 }}
-              >
-                {projectList.map((item) => {
-                  return (
-                    
-                    <div key={item} className={styles.projectMan}>
-                      <span>{item}</span>
-                      <DeleteOutlined onClick={() => console.log('delete')} />
-                    </div>
-                  );
-                })}
-              </Card>
-            </Col>
-          </Row>
-
+        <Row>
+          <Col span={12}>
+            <Card
+              title={<div className={styles.cardTitle}>项目权限</div>}
+              extra={
+                <Popover content={content} trigger="click" placement="right">
+                  <Button type="link">添加</Button>
+                </Popover>
+              }
+              //style={{ width: 330 }}
+            >
+              {projectList.map((item) => {
+                return (
+                  <div key={item} className={styles.projectMan}>
+                    <span>{item}</span>
+                    <DeleteOutlined onClick={() => console.log('delete')} />
+                  </div>
+                );
+              })}
+            </Card>
+          </Col>
+        </Row>
       </DrawerForm>
     </PageContainer>
   );

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { connect, history } from 'umi';
 import ProCard, { StatisticCard } from '@ant-design/pro-card';
+import ProForm, { ModalForm, ProFormText, ProFormSelect, DrawerForm } from '@ant-design/pro-form';
+import { Alert, Button, Card } from 'antd';
 
 import { EditOutlined } from '@ant-design/icons';
 
@@ -16,27 +18,58 @@ const tabs = [
   { key: 'exception', tab: '异常' },
 ];
 
+
+/**
+ * 项目管理
+ * 根据设备（全部、在线、离线、异常）显示项目列表，修改项目信息
+ */
 const Project = (props) => {
-  const { dispatch, projects, submitting } = props;
+  const { dispatch, projects } = props;
   // console.log('props', props);
   // console.log(props.projects);
   //console.log('submitting',submitting);
-
+  console.log('menu.menuData',props.menu.menuData);
+  //当前选中tab
   const [tab, setTab] = useState('all');
+  //选中项目信息
+  const [project, setProject] = useState({});
+  //DrawerForm开关
+  const [updateModalVisible, handleUpdateModalVisible] = useState(false);
 
+  //编辑项目按钮回调
+  const edit = (e, project) => {
+    //console.log('project',project);
+    //console.log(e);
+    
+    e.stopPropagation(); //阻止向父级穿透click事件
+    setProject(project);
+    handleUpdateModalVisible(true);
+  };
+
+  //请求所有项目列表
   useEffect(() => {
-    dispatch({
-      type: 'project/fetchProject',
-      payload: { status: 'all' },
-    });
+    if (dispatch) {
+      dispatch({
+        type: 'project/fetchProject',
+        payload: { status: 'all' },
+      });
+    }
   }, []);
 
+  //tabs切换栏
   const projectItem = projects.map((item) => (
     <StatisticCard.Group
       bordered
       key={item.projectId}
       className={styles.project}
-      //onClick={() => history.push('accountManage')} 跳转项目页
+      onClick={() => {
+        
+        //点击项目列表，改变菜单路由
+        dispatch({
+          type: 'menu/fetchProjectMenu'
+        })
+        //history.push('deviceMonitor')
+      }} //跳转项目页
       //layout='center'
     >
       <StatisticCard
@@ -71,27 +104,121 @@ const Project = (props) => {
           value: item.exception,
         }}
       />
-      {/* <StatisticCard
-        //bordered
-        //layout='center'
-        statistic={{
-          // title: '异常',
-          // value: item.exception,
-          value: '',
-          icon: <EditOutlined />,
-        }}
-      /> */}
-
-      <StatisticCard title={<EditOutlined style={{marginTop: '32px'}}/>}>
-
-      </StatisticCard>
-
+      <StatisticCard
+        title={
+          <EditOutlined
+            onClick={(e) => edit(e, item)}
+            style={{ marginTop: '32px', pointerEvents: 'auto' }}
+          />
+        }
+      ></StatisticCard>
     </StatisticCard.Group>
   ));
 
+  //渲染弹出框，修改项目信息
+  const renderDrawerForm = (
+    <DrawerForm
+      initialValues={{
+        projectName: project.projectName,
+        leaderName: project.leaderName,
+        leaderMobile: project.leaderMobile,
+        address: project.address,
+      }}
+      onVisibleChange={handleUpdateModalVisible}
+      width={500}
+      title={'编辑项目'}
+      visible={updateModalVisible}
+      onFinish={async () => {
+        //acc存储当前记录信息
+        handleUpdateModalVisible(false);
+        message.success('设置成功');
+        return true;
+      }}
+      drawerProps={{
+        destroyOnClose: true,
+      }}
+    >
+      <ProFormText
+        span={24}
+        name="projectName"
+        label="项目名称"
+        //tooltip="最长为 24 位"
+        placeholder="请输入项目名称"
+        //initialValue={project.projectName}
+        formItemProps={{
+          rules: [
+            {
+              required: true,
+              message: '内容不能为空',
+            },
+          ],
+        }}
+      />
+
+      <ProFormText
+        span={24}
+        name="leaderName"
+        label="负责人"
+        //tooltip="最长为 24 位"
+        placeholder="请输入负责人"
+        //initialValue={project.leaderName}
+        formItemProps={{
+          rules: [
+            {
+              required: true,
+              message: '内容不能为空',
+            },
+          ],
+        }}
+      />
+
+      <ProFormText
+        span={24}
+        name="leaderMobile"
+        label="联系方式"
+        //tooltip="最长为 24 位"
+        placeholder="请输入手机号"
+        //initialValue={project.leaderMobile}
+        formItemProps={{
+          rules: [
+            {
+              required: true,
+              message: '内容不能为空',
+            },
+          ],
+        }}
+      />
+
+      <ProFormText
+        span={24}
+        name="address"
+        label="项目地址"
+        //tooltip="最长为 24 位"
+        placeholder="请输入地址"
+        //initialValue={project.address}
+        formItemProps={{
+          rules: [
+            {
+              required: true,
+              message: '内容不能为空',
+            },
+          ],
+        }}
+      />
+    </DrawerForm>
+  );
+
   return (
     <PageContainer subTitle="2021-03-23 星期二 欢迎进入奥莱paas平台">
+      <Alert
+        message="Error Text"
+        description="Error Description Error Description Error Description Error Description Error Description Error Description"
+        type="info"
+        closable
+        //  onClose={onClose}
+      />
       <ProCard
+        className={styles.proCard}
         tabs={{
           activeKey: tab,
           tabPosition: 'top',
@@ -118,11 +245,13 @@ const Project = (props) => {
           </ProCard.TabPane>
         ))}
       </ProCard>
+      {renderDrawerForm}
     </PageContainer>
   );
 };
 
-export default connect(({ project, loading }) => ({
+export default connect(({ project, loading, menu }) => ({
   projects: project.projects,
-  submitting: loading.effects['project/fetchProject'],
+  menu,
+  //submitting: loading.effects['project/fetchProject'],
 }))(Project);

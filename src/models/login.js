@@ -65,7 +65,7 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload, type }) {
-      console.log("state",state);
+      //console.log("state",state);
       // console.log("reducer-payload",payload);
       // console.log("type",type);
       setAuthority(payload.currentAuthority);

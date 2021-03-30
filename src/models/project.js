@@ -8,13 +8,13 @@ const projectModel = {
     *fetchProject({ type, payload }, { call, put }) {
       //console.log('model')
       let response;
-      console.log('payload',payload);
+      // console.log('payload',payload);
       if (payload === undefined || payload.length === 0) {
         response = yield call(getProjects);
       } else {
         response = yield call(getProjects, payload);
       }
-      console.log('response',response);
+      //console.log('response',response);
       yield put({
         type: 'getProjects',
         payload: response,
@@ -23,8 +23,8 @@ const projectModel = {
   },
   reducers: {
     getProjects(state, action) {
-      console.log('reducer');
-      console.log('state', state);
+      // console.log('reducer');
+      // console.log('state', state);
       return {
         ...state,
         projects: action.payload || [],
