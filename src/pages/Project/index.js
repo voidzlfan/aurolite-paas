@@ -8,6 +8,7 @@ import { Alert, Button, Card } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
 import styles from './index.less';
+import Ribbon from 'antd/lib/badge/Ribbon';
 
 const { Statistic, Divider } = StatisticCard;
 
@@ -18,6 +19,19 @@ const tabs = [
   { key: 'exception', tab: '异常' },
 ];
 
+const staticCardValueStyle = {
+  marginTop: -10,
+  fontSize: 18,
+  fontWeight: 700,
+  marginBottom: 8,
+  color: '#333',
+};
+
+const imgStyle = {
+  display: 'block',
+  width: 42,
+  height: 42,
+};
 
 /**
  * 项目管理
@@ -40,7 +54,7 @@ const Project = (props) => {
   const edit = (e, project) => {
     //console.log('project',project);
     //console.log(e);
-    
+
     e.stopPropagation(); //阻止向父级穿透click事件
     setProject(project);
     handleUpdateModalVisible(true);
@@ -69,41 +83,94 @@ const Project = (props) => {
         dispatch({
           type: 'project/setCurrentProject',
           payload: item,
-        })
-      }} 
+        });
+      }}
     >
       <StatisticCard
+        className={styles.staticCardTitle}
         statistic={{
-          title: item.projectName,
-          value: item.subProjectTitle,
+          title: (
+            <p className={styles.projectLogo}>
+              <img
+                src="https://static1.tuyacn.com/static/illuminate/_next/static/img/a742e891b53b80993e8e45d6009faf97.png"
+                alt=""
+              />
+            </p>
+          ),
+          value: item.projectName,
+          valueStyle: staticCardValueStyle,
+          description: (
+            <div className={styles.description}>
+              <div>{item.address}</div>
+              <div>2021年3月31日</div>
+            </div>
+          ),
         }}
       />
-      <Divider />
+
+      <Divider style={{ marginLeft: 50 }} />
 
       <StatisticCard
         statistic={{
+          //description: item.totalDevices,
           title: '设备总数',
           value: item.totalDevices,
+          valueStyle: { color: '#6A9DFF' },
+          icon: (
+            <img
+              style={imgStyle}
+              src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*dr_0RKvVzVwAAAAAAAAAAABkARQnAQ"
+              alt="icon"
+            />
+          ),
         }}
       />
+
       <StatisticCard
         statistic={{
-          title: '在线',
+          title: '在线>',
           value: item.online,
+          valueStyle: { color: '#58B784' },
+          icon: (
+            <img
+              style={imgStyle}
+              src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*-jVKQJgA1UgAAAAAAAAAAABkARQnAQ"
+              alt="icon"
+            />
+          ),
         }}
       />
+
       <StatisticCard
         statistic={{
-          title: '离线',
+          title: '离线>',
           value: item.offline,
+          valueStyle: { color: '#F69736' },
+          icon: (
+            <img
+              style={imgStyle}
+              src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*FPlYQoTNlBEAAAAAAAAAAABkARQnAQ"
+              alt="icon"
+            />
+          ),
         }}
       />
+
       <StatisticCard
         statistic={{
-          title: '异常',
+          title: '异常>',
           value: item.exception,
+          valueStyle: { color: '#E9767D' },
+          icon: (
+            <img
+              style={imgStyle}
+              src="https://gw.alipayobjects.com/mdn/rms_7bc6d8/afts/img/A*pUkAQpefcx8AAAAAAAAAAABkARQnAQ"
+              alt="icon"
+            />
+          ),
         }}
       />
+
       <StatisticCard
         title={
           <EditOutlined

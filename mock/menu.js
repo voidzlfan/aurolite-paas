@@ -12,7 +12,6 @@ export default {
           {
             path: '/room/manage/setting',
             name: 'setting',
-            component: './Welcome',
           },
         ],
       },
@@ -20,25 +19,21 @@ export default {
         path: '/device/manage',
         name: 'device',
         icon: 'setting',
-        component: './Welcome',
       },
       {
         path: '/systemSetting',
         name: 'systemSetting',
         icon: 'scheduled',
-        component: './Welcome',
       },
       {
         path: '/system',
         name: 'system',
         icon: 'setting',
-        component: './Welcome',
       },
       {
         path: '/deviceMonitor',
         name: 'deviceMonitor',
         icon: 'securityScan',
-        component: './Welcome',
       },
     ],
   },

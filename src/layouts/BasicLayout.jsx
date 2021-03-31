@@ -51,7 +51,7 @@ const menuDataRender = (menuList) =>
   menuList.map((item) => {
     const localItem = {
       ...item,
-      icon: iconEnum[item.icon],
+      icon: iconEnum[item.icon],// <-----
       children: item.children ? menuDataRender(item.children) : undefined,
     };
     //console.log("tt",Authorized.check(item.authority, localItem, null));
@@ -236,6 +236,7 @@ const BasicLayout = (props) => {
       //contentStyle={{margin: 0, padding: 0}} 整个内容区域样式
       //headerTitleRender={()=>(<div>sss</div>)} 不知道渲染什么的
       //subTitle={()=> (<div>sss</div>)}
+      style={{minWidth: 1240}}
     >
       <Authorized authority={authorized.authority} noMatch={noMatch}>
         {children}
