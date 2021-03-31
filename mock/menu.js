@@ -1,49 +1,20 @@
 export default {
-  'POST /api/getMenu': {
-    code: 0,
-    message: 'response successful',
-    data: [
-      {
-        path: '/',
-        redirect: '/projectManage',
-      },
-      {
-        path: '/projectManage',
-        name: 'project',
-        icon: 'project',
-        component: './Project',
-      },
-      {
-        path: '/accountManage',
-        name: 'account.manage',
-        icon: 'user',
-        component: './Account',
-      },
-      {
-        component: './404',
-      },
-    ],
-  },
-
+  
   'POST /api/getProjectMenu': {
     code: 0,
     message: 'response successful',
     data: [
       {
-        path: '/',
-        redirect: '/deviceMonitor',
-      },
-      {
-        path: '/room',
+        path: '/room/manage',
         name: 'room',
         icon: 'partition',
-        // routes: [
-        //   {
-        //     path: '/room/manage/setting',
-        //     name: 'setting',
-        //     component: './Welcome',
-        //   },
-        // ],
+        routes: [
+          {
+            path: '/room/manage/setting',
+            name: 'setting',
+            component: './Welcome',
+          },
+        ],
       },
       {
         path: '/device/manage',

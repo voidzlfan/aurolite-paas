@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { connect, history } from 'umi';
+import { connect, history, Link } from 'umi';
 import ProCard, { StatisticCard } from '@ant-design/pro-card';
 import ProForm, { ModalForm, ProFormText, ProFormSelect, DrawerForm } from '@ant-design/pro-form';
 import { Alert, Button, Card } from 'antd';
@@ -28,7 +28,7 @@ const Project = (props) => {
   // console.log('props', props);
   // console.log(props.projects);
   //console.log('submitting',submitting);
-  console.log('menu.menuData',props.menu.menuData);
+  //console.log('menu.menuData',props.menu.menuData);
   //当前选中tab
   const [tab, setTab] = useState('all');
   //选中项目信息
@@ -63,14 +63,14 @@ const Project = (props) => {
       key={item.projectId}
       className={styles.project}
       onClick={() => {
-        
-        //点击项目列表，改变菜单路由
+        //1.跳转项目
+        //2.设置当前选中项目信息
+        history.push('deviceMonitor');
         dispatch({
-          type: 'menu/fetchProjectMenu'
+          type: 'project/setCurrentProject',
+          payload: item,
         })
-        //history.push('deviceMonitor')
-      }} //跳转项目页
-      //layout='center'
+      }} 
     >
       <StatisticCard
         statistic={{

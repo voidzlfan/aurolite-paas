@@ -3,6 +3,7 @@ const projectModel = {
   namespace: 'project',
   state: {
     projects: [], //项目数
+    project: {},  //当前选中项目
   },
   effects: {
     *fetchProject({ type, payload }, { call, put }) {
@@ -30,6 +31,16 @@ const projectModel = {
         projects: action.payload || [],
       };
     },
+
+    setCurrentProject(state, action){
+      // console.log(state);
+      // console.log(action);
+      return {
+        ...state,
+        project: action.payload || {},
+      };
+    }
+
   },
 };
 export default projectModel;

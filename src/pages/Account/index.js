@@ -18,7 +18,7 @@ import ProjectList from './components/Project';
  * 功能：管理当前账号权限下所有子账号，CRUD
  */
 const Account = (props) => {
-  console.log('props', props);
+  //console.log('props', props);
   const { accountList, dispatch } = props;
   //console.log('accountList', accountList);
 
@@ -204,7 +204,7 @@ const Account = (props) => {
           columns={columns}
           params={{ pageSize: 10 }}
           request={async (params) => {
-            console.log('params', params);
+            //console.log('params', params);
             const response = await getAccList(params);
             return {
               data: response.data,

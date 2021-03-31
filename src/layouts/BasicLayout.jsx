@@ -94,22 +94,24 @@ const BasicLayout = (props) => {
     children,
     settings,
     menuData,
-    loading,
+    currentProject,
     location = {
       pathname: '/',
     },
   } = props;
   const menuDataRef = useRef([]);
+  const pathname = location.pathname;
+
+  //console.log('location',location);
+  //console.log('currentProject',props.currentProject);
 
   useEffect(() => {
     if (dispatch) {
       dispatch({
-        type: 'menu/fetchMenu',
+        type: 'menu/fetchProjectMenu',
       });
     }
   }, []);
-
-  console.log('basic menuData', menuData);
 
   const handleMenuCollapse = (payload) => {
     //console.log('payload', payload);
@@ -130,19 +132,49 @@ const BasicLayout = (props) => {
   );
   const { formatMessage } = useIntl();
 
+  //项目菜单
+  const projectMenu = {
+    routes: menuData,
+  };
+  //默认菜单
+  const homeMenu = {
+    routes: [
+      {
+        path: '/',
+        redirect: '/projectManage',
+      },
+      {
+        path: '/projectManage',
+        name: 'project',
+        icon: 'project',
+        component: './Project',
+      },
+      {
+        path: '/accountManage',
+        name: 'account.manage',
+        icon: 'user',
+        component: './Account',
+      },
+      {
+        component: './404',
+      },
+    ],
+  };
+
   return (
     <ProLayout
       logo={logo}
       formatMessage={formatMessage}
-      menu={{ loading }}
-      loading={loading}
-      {...props} //注入包含route.js路由配置信息、withRouter
+      {...props} //注入包含route.js路由配置信息
       {...settings} //注入defaultSettings.js配置信息
+      route={
+        pathname === '/projectManage' || pathname === '/accountManage' ? homeMenu : projectMenu
+      }
       onCollapse={handleMenuCollapse}
-      onMenuHeaderClick={() => history.push('/')}
+      onMenuHeaderClick={() => {
+        history.push('/projectManage');
+      }}
       menuItemRender={(menuItemProps, defaultDom) => {
-        //menuItemProps从props接收到的menu封装
-        //console.log('menuItemProps',menuItemProps);
         if (
           menuItemProps.isUrl ||
           !menuItemProps.path ||
@@ -177,7 +209,8 @@ const BasicLayout = (props) => {
         }
         return null;
       }}
-      menuDataRender={() => menuDataRender(menuData)}
+      //menuDataRender={() => menuDataRender(menuData)}
+      menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
       postMenuData={(menuData) => {
         menuDataRef.current = menuData || [];
@@ -189,7 +222,14 @@ const BasicLayout = (props) => {
       //   fontColor: 'rgba(24,144,255,0.15)',
       // }}
       //links={[<a>测试</a>]}
-      headerContentRender={(BasicLayoutProps) => 'BasicLayout headerContentRender'} //(BasicLayoutProps.breadcrumb[location.pathname].name)
+      //展示当前选中的项目名称
+      headerContentRender={(BasicLayoutProps) => {
+        if (pathname === '/projectManage' || pathname === '/accountManage') {
+          return '';
+        } else {
+          return currentProject.projectName || '';
+        }
+      }} //(BasicLayoutProps.breadcrumb[location.pathname].name)
       //headerRender={()=> <div>sss</div>} 自定义顶栏
       //menuHeaderRender={()=> <div>sss</div>} 自定义菜单栏顶部标题和logo
       //pageTitleRender={()=>("sss")} 自定义浏览器tab标签栏上的标题
@@ -204,9 +244,9 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global, settings, menu }) => ({
+export default connect(({ global, settings, menu, project }) => ({
   collapsed: global.collapsed, //控制菜单的收起和展开
   settings,
   menuData: menu.menuData,
-  loading: menu.loading,
+  currentProject: project.project,
 }))(BasicLayout);

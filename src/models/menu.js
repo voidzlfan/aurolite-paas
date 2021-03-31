@@ -1,19 +1,10 @@
-import { getMenuData, getProjectMenuData } from '@/services/menu';
+import { getProjectMenuData } from '@/services/menu';
 const menuModel = {
   namespace: 'menu',
   state: {
     menuData: [],
-    loading: true,
   },
   effects: {
-    *fetchMenu(_, { call, put }) {
-      const response = yield call(getMenuData);
-      yield put({
-        type: 'saveMenuData',
-        payload: response.data,
-      });
-    },
-
     *fetchProjectMenu(_, { call, put }) {
       const response = yield call(getProjectMenuData);
       yield put({
@@ -27,7 +18,6 @@ const menuModel = {
       return {
         ...state,
         menuData: action.payload || [],
-        loading: false,
       };
     },
   },
