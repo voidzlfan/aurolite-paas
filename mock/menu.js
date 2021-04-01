@@ -18,7 +18,7 @@ export default {
       {
         path: '/device/manage',
         name: 'device',
-        icon: 'setting',
+        icon: 'device',
       },
       {
         path: '/systemSetting',

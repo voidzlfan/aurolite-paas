@@ -13,6 +13,7 @@ import {
   SettingOutlined,
   ScheduleOutlined,
   SecurityScanOutlined,
+  TagsOutlined
 } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
@@ -39,6 +40,7 @@ const iconEnum = {
   project: <ProjectOutlined />,
   user: <UserOutlined />,
   partition: <PartitionOutlined />,
+  device: <TagsOutlined />,
   setting: <SettingOutlined />,
   scheduled: <ScheduleOutlined />,
   securityScan: <SecurityScanOutlined />,
@@ -203,12 +205,12 @@ const BasicLayout = (props) => {
       //     <span>{route.breadcrumbName}</span>
       //   );
       // }}
-      footerRender={() => {
-        if (settings.footerRender || settings.footerRender === undefined) {
-          return defaultFooterDom;
-        }
-        return null;
-      }}
+      // footerRender={() => {
+      //   if (settings.footerRender || settings.footerRender === undefined) {
+      //     return defaultFooterDom;
+      //   }
+      //   return null;
+      // }}
       //menuDataRender={() => menuDataRender(menuData)}
       menuDataRender={menuDataRender}
       rightContentRender={() => <RightContent />}
@@ -222,14 +224,15 @@ const BasicLayout = (props) => {
       //   fontColor: 'rgba(24,144,255,0.15)',
       // }}
       //links={[<a>测试</a>]}
-      //展示当前选中的项目名称
+
+      //展示当前选中的项目名称   //(BasicLayoutProps.breadcrumb[location.pathname].name)
       headerContentRender={(BasicLayoutProps) => {
         if (pathname === '/projectManage' || pathname === '/accountManage') {
           return '';
         } else {
-          return currentProject.projectName || '';
+          return <span>{BasicLayoutProps.currentProject.projectName}</span>;
         }
-      }} //(BasicLayoutProps.breadcrumb[location.pathname].name)
+      }} 
       //headerRender={()=> <div>sss</div>} 自定义顶栏
       //menuHeaderRender={()=> <div>sss</div>} 自定义菜单栏顶部标题和logo
       //pageTitleRender={()=>("sss")} 自定义浏览器tab标签栏上的标题

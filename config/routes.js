@@ -113,7 +113,7 @@ export default [
                 path: '/deviceMonitor',
                 name: 'deviceMonitor',
                 icon: 'securityScan',
-                component: './Welcome'
+                component: './DeviceMonitor'
               },
               
               {
