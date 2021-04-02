@@ -85,6 +85,10 @@ export default [
                 icon: 'partition',
                 routes: [
                   {
+                    path: '/room/manage',
+                    redirect: '/room/manage/setting',
+                  },
+                  {
                     path: '/room/manage/setting',
                     name: 'setting',
                     component: './Welcome'
