@@ -10,6 +10,9 @@ import { EditOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import Ribbon from 'antd/lib/badge/Ribbon';
 
+import { DEVICE_ALL, DEVICE_OFF_LINE, DEVICE_EXCEPTION } from '../../utils/constant';
+import { setCookie } from '../../utils/cookie';
+
 const { Statistic, Divider } = StatisticCard;
 
 const tabs = [
@@ -41,8 +44,7 @@ const Project = (props) => {
   const { dispatch, projects } = props;
   // console.log('props', props);
   // console.log(props.projects);
-  //console.log('submitting',submitting);
-  //console.log('menu.menuData',props.menu.menuData);
+
   //当前选中tab
   const [tab, setTab] = useState('all');
   //选中项目信息
@@ -55,7 +57,7 @@ const Project = (props) => {
     //console.log('project',project);
     //console.log(e);
 
-    e.stopPropagation(); //阻止向父级穿透click事件
+    //e.stopPropagation(); //阻止向父级穿透click事件
     setProject(project);
     handleUpdateModalVisible(true);
   };
@@ -72,20 +74,7 @@ const Project = (props) => {
 
   //tabs切换栏
   const projectItem = projects.map((item) => (
-    <StatisticCard.Group
-      bordered
-      key={item.projectId}
-      className={styles.project}
-      onClick={() => {
-        //1.跳转项目
-        //2.设置当前选中项目信息
-        history.push('deviceMonitor');
-        dispatch({
-          type: 'project/setCurrentProject',
-          payload: item,
-        });
-      }}
-    >
+    <StatisticCard.Group bordered key={item.projectId} className={styles.project}>
       <StatisticCard
         className={styles.staticCardTitle}
         statistic={{
@@ -111,6 +100,12 @@ const Project = (props) => {
       <Divider style={{ marginLeft: 50 }} />
 
       <StatisticCard
+        className={styles.projectItem}
+        onClick={() => {
+          history.push('deviceMonitor');
+          setCookie('projectId', item.projectId, 1);
+          setCookie('deviceStatus',DEVICE_ALL,1);
+        }}
         statistic={{
           //description: item.totalDevices,
           title: '设备总数',
@@ -126,7 +121,8 @@ const Project = (props) => {
         }}
       />
 
-      <StatisticCard
+      {/* <StatisticCard
+        className={styles.projectItem}
         statistic={{
           title: '在线>',
           value: item.online,
@@ -139,9 +135,15 @@ const Project = (props) => {
             />
           ),
         }}
-      />
+      /> */}
 
       <StatisticCard
+        className={styles.projectItem}
+        onClick={() => {
+          history.push('deviceMonitor');
+          setCookie('projectId', item.projectId, 1);
+          setCookie('deviceStatus',DEVICE_OFF_LINE,1);
+        }}
         statistic={{
           title: '离线>',
           value: item.offline,
@@ -157,6 +159,12 @@ const Project = (props) => {
       />
 
       <StatisticCard
+        className={styles.projectItem}
+        onClick={() => {
+          history.push('deviceMonitor');
+          setCookie('projectId', item.projectId, 1);
+          setCookie('deviceStatus',DEVICE_EXCEPTION,1);
+        }}
         statistic={{
           title: '异常>',
           value: item.exception,
@@ -317,8 +325,7 @@ const Project = (props) => {
   );
 };
 
-export default connect(({ project, loading, menu }) => ({
+export default connect(({ project, loading }) => ({
   projects: project.projects,
-  menu,
   //submitting: loading.effects['project/fetchProject'],
 }))(Project);

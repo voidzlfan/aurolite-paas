@@ -20,6 +20,7 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/logo.svg';
+import { removeCookie } from '../utils/cookie';
 
 // 无权限页面
 const noMatch = (
@@ -175,6 +176,8 @@ const BasicLayout = (props) => {
       onCollapse={handleMenuCollapse}
       onMenuHeaderClick={() => {
         history.push('/projectManage');
+        removeCookie('projectId');
+        removeCookie('deviceStatus');
       }}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (

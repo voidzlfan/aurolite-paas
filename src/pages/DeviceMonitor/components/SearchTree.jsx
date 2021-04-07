@@ -23,7 +23,7 @@ const getParentKey = (key, tree) => {
 };
 
 //用以存储所有的TreeNode
-const dataList = [];
+let dataList = [];
 const generateList = (data) => {
   for (let i = 0; i < data.length; i++) {
     const node = data[i];
@@ -48,10 +48,13 @@ const SearchTree = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAtoExpandParent] = useState(true);
 
-  // ！！！这个useEffect有bug，当treeData变化时，dataList会在原数据上再增加TreeNode
-  // 出现几率很小，比如同一时刻，增加区域，监控模块TreeData变化
-  // 如果不允许多点登录，不会出现bug
+  // ！！！这个useEffect里的方法有bug，当treeData变化时或组件重新加载时，
+  // dataList会在原数据上再增加TreeNode，虽然功能能用，但是效率不太好
+  // 所以添加判断，清空dataList
   useEffect(() => {
+    if(dataList.length !== 0){
+      dataList = [];
+    }
     generateList(treeData);
   }, [treeData]);
 

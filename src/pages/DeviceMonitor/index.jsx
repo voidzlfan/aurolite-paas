@@ -11,8 +11,11 @@ import styles from './index.less';
 
 import noneImg from '../../assets/noneImg.png';
 
+import { getCookie } from '../../utils/cookie';
+
 const DeviceMonitor = (props) => {
   const { dispatch, treeData } = props;
+  //console.log(getCookie('projectId')); 
 
   //当前选中的区域
   const [currentStructure, setCurrentStructure] = useState('');
@@ -44,6 +47,7 @@ const DeviceMonitor = (props) => {
       <ProCard split="vertical" className={styles.cardContainer}>
         <ProCard
           title={title}
+          tip={'提示'}
           extra={
             <a type="link" onClick={refresh}>
               刷新
@@ -68,7 +72,7 @@ const DeviceMonitor = (props) => {
             )}
           </div>
 
-          <Control/>
+          <Control />
         </ProCard>
       </ProCard>
     </PageContainer>
